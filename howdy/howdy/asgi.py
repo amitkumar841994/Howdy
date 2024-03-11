@@ -17,12 +17,12 @@ import channel1.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'howdy.settings')
 
-application = get_asgi_application()
+application1 = get_asgi_application()
 
 application = ProtocolTypeRouter({
-    "http": application,
+    "http": application1,
     "websocket":URLRouter(
-        channel1.routing.wesocket_urlpatterns
+        channel1.routing.websocket_urlpatterns
     )
     # Just HTTP for now. (We can add other protocols later.)
 })
