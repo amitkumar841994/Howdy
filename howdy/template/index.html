@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Channel</title>
+        <h1>?Channel</h1>
+    </head>
+    <body>
+        <textarea id="chat-area" rows="10" cols="50" readonly></textarea><br>
+        <input type="text" id="chat-input"><button onclick="sendMessage()">Send</button>
+    
+        <script>
+            var ws= new WebSocket('ws://127.0.0.1:8000/wc/sc/')
+            ws.onopen=function (){
+                console.log("websocketopen")
+                ws.send("Hii this client")
+            }
+            ws.onmessage=function(event) {
+                
+                const data = JSON.parse(e.data);
+                document.getElementById('chat-area').value += data.message + '\n';
+            };
+
+            function sendMessage() {
+            const messageInputDom = document.getElementById('chat-input');
+            const message = messageInputDom.value;
+            ws.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        }
+
+            
+        </script>
+    </body>
+</html>
