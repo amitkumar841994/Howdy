@@ -4,29 +4,35 @@
         <h1>?Channel</h1>
     </head>
     <body>
-        <textarea id="chat-area" rows="10" cols="50" readonly></textarea><br>
-        <input type="text" id="chat-input"><button onclick="sendMessage()">Send</button>
+        <form id="form">
+            <input type="text" name="message">
+
+        </form>
+        <div id="message"></div>
     
         <script>
-            var ws= new WebSocket('ws://127.0.0.1:8000/wc/sc/')
-            ws.onopen=function (){
-                console.log("websocketopen")
-                ws.send("Hii this client")
+         let url=`ws://${window.location.host}/wc/sc/`
+         const chatsocket=new WebSocket(url)
+        
+         chatsocket.onmessage=function(e){
+            let data=JSON.parse(e.data)
+            console.log("Data",data);
+            if(data.type==='chat'){
+                let message=document.getElementById('message')
+                message.insertAdjacentHTML('beforeend',`<div>
+                    <p>${data.message}</p></div>`)
             }
-            ws.onmessage=function(event) {
-                
-                const data = JSON.parse(e.data);
-                document.getElementById('chat-area').value += data.message + '\n';
-            };
+         } 
 
-            function sendMessage() {
-            const messageInputDom = document.getElementById('chat-input');
-            const message = messageInputDom.value;
-            ws.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
-        }
+         let form =document.getElementById('form')
+         form.addEventListener('submit',(e) =>{
+            e.preventDefault()
+            let message=e.target.message.value
+            chatsocket.send(JSON.stringify({
+                'message':message
+            }))
+            form.reset()
+         })
 
             
         </script>

@@ -15,15 +15,16 @@ from django.core.asgi import get_asgi_application
 import channel1.routing
 
 
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'howdy.settings')
 
 # application1 = get_asgi_application()
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
-    "websocket":URLRouter(
+    "websocket":AuthMiddlewareStack(
+        URLRouter(
         channel1.routing.websocket_urlpatterns
+        )
     )
     # Just HTTP for now. (We can add other protocols later.)
 })
