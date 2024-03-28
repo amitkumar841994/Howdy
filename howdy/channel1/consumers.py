@@ -12,6 +12,8 @@ class ChatConsumer(WebsocketConsumer):
 
     def connect(self):
         self.room_group_name='test'
+        user=self.scope['user']
+        print(">>>>>>>>>>>>>",self.scope["session"])
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
             self.channel_name
